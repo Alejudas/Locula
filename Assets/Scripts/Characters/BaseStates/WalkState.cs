@@ -23,12 +23,10 @@ public class WalkState : BaseCharacterState
 
         moveDirection = PlayerObj.transform.right * inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>().x + PlayerObj.transform.forward * inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>().y;
 
-        //moveDirection = inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() * PlayerObj.transform.forward.normalized;
     }
 
     public override void OnStateFixedUpdate()
     {
-        //rb.linearVelocity = new Vector3(moveDirection.x * speed, rb.linearVelocity.y, moveDirection.y * speed);
         rb.linearVelocity = new Vector3(moveDirection.x * speed, rb.linearVelocity.y, moveDirection.z * speed);
     }
 
