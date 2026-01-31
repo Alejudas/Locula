@@ -6,6 +6,6 @@ public abstract class BaseStates : MonoBehaviour
     public BaseStates(EnemyController enemy) => this.enemy = enemy;
 
     public abstract void Enter();
-    public abstract void Updtate();
+    public abstract void Update();
     public abstract void Exit();
 }

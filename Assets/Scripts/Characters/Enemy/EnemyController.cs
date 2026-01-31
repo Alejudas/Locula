@@ -4,9 +4,10 @@ using UnityEngine.AI;
 public class EnemyController : MonoBehaviour
 {
     [Header ("Movement")]
-    public float speed;
-    public float currentSpeed;
+    public float frenesiSpeed = 2;
+    public float normalSpeed;
     public float detectionRange;
+
 
     [Header("Attack")]
     public float attackRange;
@@ -16,17 +17,23 @@ public class EnemyController : MonoBehaviour
     public Transform player;
     public NavMeshAgent agent;
     private BaseStates currentState;
+
+    public PlayerMovement pm;
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
 
-        ChangeState(new PatrolState(this));
+        ChangeState(new FollowState(this));
+
+        pm = FindAnyObjectByType<PlayerMovement>();
+
+        normalSpeed = agent.speed;
     }
 
     private void Update()
     {
         if(player == null) return;
-        currentState?.Updtate();
+        currentState?.Update();
     }
     public void ChangeState(BaseStates newstate)
     {

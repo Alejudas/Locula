@@ -11,8 +11,10 @@ public class PatrolState : BaseStates
 
     public override void Enter()
     {
+        enemy.agent.isStopped = true;
+
     }
-    public override void Updtate()
+    public override void Update()
     {
         if (patrolPoints == null || patrolPoints.Length < 0)
         {

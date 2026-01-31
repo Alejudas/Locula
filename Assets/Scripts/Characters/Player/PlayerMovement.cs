@@ -18,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
     public float groundDistance = 0.3f;
     public LayerMask groundMask;
 
+    public /*static*/ bool isHidden = false;
+
     private Rigidbody rb;
     [SerializeField] private float currentSpeed;
     private bool isGrounded;
@@ -81,6 +83,14 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        isHidden = true;
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        isHidden = false;
+    }
     void CheckGround()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
