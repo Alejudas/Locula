@@ -96,5 +96,8 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
     }
 
+    public void OhMyGodTheyKilledKenny_Motherfuchers()
+    {
 
+    }
 }
