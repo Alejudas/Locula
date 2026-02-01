@@ -13,13 +13,27 @@ public class PlayerController : MonoBehaviour
 
     IdleState idle;
     WalkState walk;
-    CrouchingState crouching;
+    CrouchingState crouch;
     TakeDamageState takeDamage;
     JumpState jump;
 
     [SerializeField] float walkSpeed;
     [SerializeField] float runSpeed;
+
+    [Header("Crounch")]
     [SerializeField] float crouchSpeed;
+    [SerializeField] float crouchHeight = 1f;
+    [SerializeField] Transform cameraHolder;
+    bool isHidden = false;
+
+    [Header("Ground Check")]
+    [SerializeField] Transform groundCheck;
+    [SerializeField] float groundDistance = 0.3f;
+    [SerializeField] LayerMask groundMask;
+    bool isGrounded;
+
+    [Header("Jump")]
+    [SerializeField] float jumpForce;
 
     private void Awake()
     {
@@ -38,9 +52,9 @@ public class PlayerController : MonoBehaviour
     {
         idle = container.Instantiate<IdleState>(new object[] { gameObject });
         walk = container.Instantiate<WalkState>(new object[] { gameObject, walkSpeed });
-        crouching = container.Instantiate<CrouchingState>(new object[] { gameObject });
+        crouch = container.Instantiate<CrouchingState>(new object[] { gameObject, crouchSpeed, crouchHeight, cameraHolder });
         takeDamage = container.Instantiate<TakeDamageState>(new object[] { gameObject });
-        jump = container.Instantiate<JumpState>(new object[] { gameObject });
+        jump = container.Instantiate<JumpState>(new object[] { gameObject, crouchSpeed, jumpForce });
     }
 
     Dictionary<ICharacterState, List<StateTransition>> Transitions()
@@ -52,7 +66,8 @@ public class PlayerController : MonoBehaviour
                 new()
                 {
                     new(walk, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() != Vector2.zero),
-                    new(crouching, ()=> inputSystem.ControlsGetter().Player.Crouch.IsPressed()),
+                    new(crouch, ()=> inputSystem.ControlsGetter().Player.Crouch.IsPressed()),
+                    new(jump, ()=> inputSystem.ControlsGetter().Player.Jump.WasPressedThisFrame() && CheckGround())
 
                 }
             },
@@ -60,7 +75,27 @@ public class PlayerController : MonoBehaviour
                 walk,
                 new()
                 {
-                    new(walk, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() == Vector2.zero),
+                    new(idle, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() == Vector2.zero),
+                    new(crouch, ()=> inputSystem.ControlsGetter().Player.Crouch.IsPressed()),
+                    new(jump, ()=> inputSystem.ControlsGetter().Player.Jump.WasPressedThisFrame() && isGrounded)
+                }
+            },
+            {
+                crouch,
+                new()
+                {
+                    new(idle, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() == Vector2.zero && isHidden == false && !inputSystem.ControlsGetter().Player.Crouch.IsPressed()),
+                    new(walk, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() != Vector2.zero && isHidden == false && !inputSystem.ControlsGetter().Player.Crouch.IsPressed()),
+                    new(jump, ()=> inputSystem.ControlsGetter().Player.Jump.WasPressedThisFrame() && isGrounded)
+                }
+            },
+            {
+                jump,
+                new()
+                {
+                    new(idle, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() == Vector2.zero && CheckGround() && rb.linearVelocity.y < 0.25f),
+                    new(walk, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() != Vector2.zero && CheckGround() && rb.linearVelocity.y < 0.25f),
+                    new(crouch, ()=> inputSystem.ControlsGetter().Player.Crouch.IsPressed() && CheckGround() && rb.linearVelocity.y < 0.25f),
                 }
             }
         };
@@ -73,5 +108,19 @@ public class PlayerController : MonoBehaviour
         {
 
         };
+    }
+
+    bool CheckGround()
+    {
+        return isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        isHidden = true;
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        isHidden = false;
     }
 }
