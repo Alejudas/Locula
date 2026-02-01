@@ -56,10 +56,10 @@ MonoBehaviour:
     m_Value: 1
   distanceFadeNear:
     m_OverrideState: 1
-    m_Value: 0.15
+    m_Value: 0.04
   distanceFadeFar:
     m_OverrideState: 1
-    m_Value: 0.6
+    m_Value: 0.4
   depthSampleType:
     m_OverrideState: 1
     m_Value: 0
@@ -95,7 +95,7 @@ MonoBehaviour:
     m_Value: 11.18
   normalThreshold:
     m_OverrideState: 1
-    m_Value: 0.235
+    m_Value: 0.5
   enableNormalOutline:
     m_OverrideState: 1
     m_Value: 1
