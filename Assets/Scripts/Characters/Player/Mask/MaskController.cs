@@ -20,7 +20,10 @@ public class MaskController : MonoBehaviour
     [SerializeField] Transform detectorPivot;
     [SerializeField] LayerMask allowedLayers;
 
+    [SerializeField] float timeMask3;
     float timerMask3 = 0;
+
+    [SerializeField] GameObject deadPanel;
 
     private void Awake()
     {
@@ -47,6 +50,18 @@ public class MaskController : MonoBehaviour
         inputSystem.ControlsGetter().Player.Attack.started -= UseMask;
     }
 
+    private void Update()
+    {
+        if(mask3.Used == true)
+        {
+            timerMask3 += Time.deltaTime;
+            if(timerMask3 >= timeMask3)
+            {
+                mask3.Used = false;
+            }
+        }
+    }
+
     public void ChangeToNextMask(InputAction.CallbackContext context)
     {
         masks[currentMaskIndex].MaskDeselected();
@@ -63,9 +78,18 @@ public class MaskController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.CompareTag("Enemy") && currentMaskIndex == 2 && mask3.Used == false)
+        if(collision.gameObject.CompareTag("Enemy") )
         {
-
+            if(currentMaskIndex == 2 && mask3.Used == false)
+            {
+                mask3.Used = true;
+                
+            }
+            else
+            {
+                Time.timeScale = 0;
+                deadPanel.SetActive(true);
+            }
         }
     }
 
