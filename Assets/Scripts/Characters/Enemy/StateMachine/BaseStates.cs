@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class BaseStates : MonoBehaviour
+public abstract class BaseStates 
 {
     protected EnemyController enemy;
     public BaseStates(EnemyController enemy) => this.enemy = enemy;

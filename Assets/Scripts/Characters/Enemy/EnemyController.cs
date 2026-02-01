@@ -18,6 +18,11 @@ public class EnemyController : MonoBehaviour
     public NavMeshAgent agent;
     private BaseStates currentState;
 
+    public Transform[] patrolPoints;
+    public Transform target;
+    [HideInInspector] public int patrolIndex = 0;
+
+    public bool canAttack;
     public PlayerMovement pm;
     private void Start()
     {
@@ -46,5 +51,13 @@ public class EnemyController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (canAttack)
+        {
+            //collision.gameObjec
+        }
     }
 }

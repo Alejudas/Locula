@@ -36,10 +36,7 @@ public class PlayerMovement : MonoBehaviour
     {
         CheckGround();
         HandleCrouch();
-        if (isCrouching == false)
-        {
-            HandleMovement();
-        }
+        HandleMovement();
         HandleJump();
     }
 
@@ -49,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
         float z = Input.GetAxis("Vertical");
 
         bool isRunning = Input.GetKey(KeyCode.LeftShift) && isCrouching == false;
-        currentSpeed = isRunning ? runSpeed : walkSpeed;
+        currentSpeed = isCrouching ? crouchSpeed : isRunning ? runSpeed : walkSpeed;
 
 
 
@@ -75,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
             transform.localScale = new Vector3(1, crouchHeight / normalHeight, 1);
             cameraHolder.localPosition = new Vector3(0, 0.5f, 0);
         }
-        else if (Input.GetKeyUp(KeyCode.LeftControl))
+        else if (!Input.GetKey(KeyCode.LeftControl) && isHidden == false)
         {
             isCrouching = false;
             transform.localScale = Vector3.one;
@@ -96,8 +93,5 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
     }
 
-    public void OhMyGodTheyKilledKenny_Motherfuchers()
-    {
 
-    }
 }
