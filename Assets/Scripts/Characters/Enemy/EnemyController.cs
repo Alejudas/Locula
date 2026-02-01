@@ -22,7 +22,10 @@ public class EnemyController : MonoBehaviour
     public Transform target;
     [HideInInspector] public int patrolIndex = 0;
 
-    public bool canAttack;
+    public float coolTime;
+    public float time;
+
+    public bool stuned = false;
     public PlayerMovement pm;
     private void Start()
     {
@@ -39,6 +42,21 @@ public class EnemyController : MonoBehaviour
     {
         if(player == null) return;
         currentState?.Update();
+
+        if(Input.GetKeyDown(KeyCode.L))
+        {
+            stuned = true;
+        }
+
+        if(time < coolTime && stuned == true)
+        {
+            time += Time.deltaTime;
+        }
+        
+        if (stuned == true)
+        {
+            ChangeState(new StunedState(this));
+        }
     }
     public void ChangeState(BaseStates newstate)
     {
@@ -53,11 +71,5 @@ public class EnemyController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, detectionRange);
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (canAttack)
-        {
-            //collision.gameObjec
-        }
-    }
+  
 }
