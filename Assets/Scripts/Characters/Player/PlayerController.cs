@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
 
     IdleState idle;
     WalkState walk;
+    CrouchingState crouching;
+    TakeDamageState takeDamage;
+    JumpState jump;
 
     [SerializeField] float walkSpeed;
     [SerializeField] float runSpeed;
@@ -35,6 +38,9 @@ public class PlayerController : MonoBehaviour
     {
         idle = container.Instantiate<IdleState>(new object[] { gameObject });
         walk = container.Instantiate<WalkState>(new object[] { gameObject, walkSpeed });
+        crouching = container.Instantiate<CrouchingState>(new object[] { gameObject });
+        takeDamage = container.Instantiate<TakeDamageState>(new object[] { gameObject });
+        jump = container.Instantiate<JumpState>(new object[] { gameObject });
     }
 
     Dictionary<ICharacterState, List<StateTransition>> Transitions()
@@ -46,6 +52,8 @@ public class PlayerController : MonoBehaviour
                 new()
                 {
                     new(walk, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() != Vector2.zero),
+                    new(crouching, ()=> inputSystem.ControlsGetter().Player.Crouch.IsPressed()),
+
                 }
             },
             {
