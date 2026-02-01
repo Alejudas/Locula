@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[DefaultExecutionOrder(-9999)]
 public class Wall : MonoBehaviour
 {
     [SerializeField] Material[] transparentMaterials;
