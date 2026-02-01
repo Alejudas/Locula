@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 043f59915bf92a640bb407f5d9951678
+guid: e7bf75bb045baf941a28a6e18cfd15d7
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - GRAMES
+  - Malvie Trial
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
