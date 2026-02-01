@@ -2,31 +2,42 @@ using UnityEngine;
 using DG.Tweening;
 public class ShootArrow : MonoBehaviour
 {
-    [SerializeField] private GameObject arrowPrefab;
+    [SerializeField] private GameObject arrow;
     [SerializeField] private Transform destiny;
-    [SerializeField] private Vector3 spawnPoint;
+    [SerializeField] private Transform spawnPoint;
+    [SerializeField] private float travelTime = 0.5f;
+    [SerializeField] private float cooldown = 15f;
 
-    private void Start()
+    private bool isShooting;
+
+    void Start()
     {
-
-        spawnPoint = arrowPrefab.transform.position;
+        arrow.transform.position = spawnPoint.position;
+        StartCoroutine(ShootLoop());
     }
-    private void Update()
-    {
-        //if(Input.GetKeyDown(KeyCode.F))
-        //{
-        Shoot();
-        //}
-    }
-    public void Shoot()
-    {
 
-        arrowPrefab.transform.DOMove(destiny.position, 0.5f);
-
-        if (Vector3.Distance(arrowPrefab.transform.position, destiny.position) < 0.1f)
+    System.Collections.IEnumerator ShootLoop()
+    {
+        while (true)
         {
-            arrowPrefab.SetActive(false);
-        }
+            // activar y disparar
+            arrow.SetActive(true);
+            isShooting = true;
 
+            yield return arrow.transform
+                .DOMove(destiny.position, travelTime)
+                .WaitForCompletion();
+
+            // llegó se apaga
+            arrow.SetActive(false);
+
+            // vuelve al spawn apagada
+            arrow.transform.position = spawnPoint.position;
+
+            isShooting = false;
+
+            // cooldown
+            yield return new WaitForSeconds(cooldown);
+        }
     }
 }

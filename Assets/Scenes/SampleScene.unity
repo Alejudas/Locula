@@ -348,7 +348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!195 &334213989
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -961,9 +961,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f5c309f706e2b94abfe4866a3b61e5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrowPrefab: {fileID: 1614122951}
+  arrow: {fileID: 1614122951}
   destiny: {fileID: 2145980969}
-  spawnPoint: {x: 0, y: 0, z: 0}
+  spawnPoint: {fileID: 1638855638}
+  travelTime: 0.5
+  cooldown: 5
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
