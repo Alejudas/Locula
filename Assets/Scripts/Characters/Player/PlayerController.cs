@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     CrouchingState crouch;
     TakeDamageState takeDamage;
     JumpState jump;
+    RunState run;
 
     [SerializeField] float walkSpeed;
     [SerializeField] float runSpeed;
@@ -55,6 +56,7 @@ public class PlayerController : MonoBehaviour
         crouch = container.Instantiate<CrouchingState>(new object[] { gameObject, crouchSpeed, crouchHeight, cameraHolder });
         takeDamage = container.Instantiate<TakeDamageState>(new object[] { gameObject });
         jump = container.Instantiate<JumpState>(new object[] { gameObject, crouchSpeed, jumpForce });
+        run = container.Instantiate<RunState>(new object[] { gameObject, runSpeed });
     }
 
     Dictionary<ICharacterState, List<StateTransition>> Transitions()
@@ -65,7 +67,8 @@ public class PlayerController : MonoBehaviour
                 idle,
                 new()
                 {
-                    new(walk, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() != Vector2.zero),
+                    new(walk, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() != Vector2.zero && !inputSystem.ControlsGetter().Player.Run.IsPressed()),
+                    new(run, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() != Vector2.zero && inputSystem.ControlsGetter().Player.Run.IsPressed()),
                     new(crouch, ()=> inputSystem.ControlsGetter().Player.Crouch.IsPressed()),
                     new(jump, ()=> inputSystem.ControlsGetter().Player.Jump.WasPressedThisFrame() && CheckGround())
 
@@ -85,7 +88,8 @@ public class PlayerController : MonoBehaviour
                 new()
                 {
                     new(idle, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() == Vector2.zero && isHidden == false && !inputSystem.ControlsGetter().Player.Crouch.IsPressed()),
-                    new(walk, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() != Vector2.zero && isHidden == false && !inputSystem.ControlsGetter().Player.Crouch.IsPressed()),
+                    new(walk, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() != Vector2.zero && isHidden == false && !inputSystem.ControlsGetter().Player.Crouch.IsPressed() && !inputSystem.ControlsGetter().Player.Run.IsPressed()),
+                    new(run, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() != Vector2.zero && isHidden == false && !inputSystem.ControlsGetter().Player.Crouch.IsPressed() && inputSystem.ControlsGetter().Player.Run.IsPressed()),
                     new(jump, ()=> inputSystem.ControlsGetter().Player.Jump.WasPressedThisFrame() && isGrounded)
                 }
             },
@@ -94,7 +98,8 @@ public class PlayerController : MonoBehaviour
                 new()
                 {
                     new(idle, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() == Vector2.zero && CheckGround() && rb.linearVelocity.y < 0.25f),
-                    new(walk, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() != Vector2.zero && CheckGround() && rb.linearVelocity.y < 0.25f),
+                    new(walk, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() != Vector2.zero && CheckGround() && rb.linearVelocity.y < 0.25f && !inputSystem.ControlsGetter().Player.Run.IsPressed()),
+                    new(run, ()=> inputSystem.ControlsGetter().Player.Move.ReadValue<Vector2>() != Vector2.zero && CheckGround() && rb.linearVelocity.y < 0.25f && inputSystem.ControlsGetter().Player.Run.IsPressed()),
                     new(crouch, ()=> inputSystem.ControlsGetter().Player.Crouch.IsPressed() && CheckGround() && rb.linearVelocity.y < 0.25f),
                 }
             }
