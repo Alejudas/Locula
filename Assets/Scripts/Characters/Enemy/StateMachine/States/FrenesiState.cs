@@ -21,7 +21,7 @@ public class FrenesiState : BaseStates
             enemy.ChangeState(new FollowState(enemy));
         }
 
-        if (enemy.pm.isHidden)
+        if (enemy.pm.isHidden == true)
         {
             enemy.ChangeState(new PatrolState(enemy));
         }

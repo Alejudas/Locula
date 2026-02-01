@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
-    [Header ("Movement")]
+    [Header("Movement")]
     public float frenesiSpeed = 2;
     public float normalSpeed;
     public float detectionRange;
@@ -13,46 +13,45 @@ public class EnemyController : MonoBehaviour
     public float attackRange;
     public float attackDamage;
 
-    [Header ("References")]
+    [Header("References")]
     public Transform player;
     public NavMeshAgent agent;
     private BaseStates currentState;
 
     public Transform[] patrolPoints;
-    public Transform target;
     [HideInInspector] public int patrolIndex = 0;
 
     public float coolTime;
     public float time;
 
     public bool stuned = false;
-    public PlayerMovement pm;
+    public PlayerController pm;
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
 
         ChangeState(new FollowState(this));
 
-        pm = FindAnyObjectByType<PlayerMovement>();
+        pm = FindAnyObjectByType<PlayerController>();
 
         normalSpeed = agent.speed;
     }
 
     private void Update()
     {
-        if(player == null) return;
+        if (player == null) return;
         currentState?.Update();
 
-        if(Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             stuned = true;
         }
 
-        if(time < coolTime && stuned == true)
+        if (time < coolTime && stuned == true)
         {
             time += Time.deltaTime;
         }
-        
+
         if (stuned == true)
         {
             ChangeState(new StunedState(this));
@@ -71,5 +70,5 @@ public class EnemyController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, detectionRange);
     }
 
-  
+
 }

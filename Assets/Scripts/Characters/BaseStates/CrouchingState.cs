@@ -21,9 +21,6 @@ public class CrouchingState : BaseCharacterState
     public override void OnStateEnter()
     {
         rb = PlayerObj.GetComponent<Rigidbody>();
-
-        //PlayerObj.transform.localScale = new Vector3(1, crouchHeight, 1);
-        //PlayerObj.transform.position = new Vector3(PlayerObj.transform.position.x, PlayerObj.transform.position.y - crouchHeight, PlayerObj.transform.position.z);
         cameraHolder.localPosition = new Vector3(0, 0.5f, 0);
     }
 
@@ -51,7 +48,7 @@ public class CrouchingState : BaseCharacterState
         base.OnStateExit();
         rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
         
-        PlayerObj.transform.localScale = Vector3.one;
+        PlayerObj.transform.localScale = new Vector3(1.3f, 1.7f, 1.3f);
         cameraHolder.localPosition = new Vector3(0, 0.9f, 0);
     }
 }

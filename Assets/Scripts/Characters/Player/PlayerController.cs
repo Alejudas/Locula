@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float crouchSpeed;
     [SerializeField] float crouchHeight = 1f;
     [SerializeField] Transform cameraHolder;
-    bool isHidden = false;
+    public bool isHidden = false;
 
     [Header("Ground Check")]
     [SerializeField] Transform groundCheck;

@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class FollowState : BaseStates
@@ -13,15 +14,20 @@ public class FollowState : BaseStates
         if (enemy.player == null) return;
 
         float distance = Vector3.Distance(enemy.transform.position, enemy.player.position);
-        enemy.agent.SetDestination(enemy.player.position);
+
+
+        if (enemy.pm.isHidden == true)
+        {
+            enemy.ChangeState(new PatrolState(enemy));
+        }
+        else
+        {
+            enemy.agent.SetDestination(enemy.player.position);
+        }
 
         if (distance <= enemy.detectionRange)
         {
             enemy.ChangeState(new FrenesiState(enemy));
-        }
-        if (enemy.pm.isHidden)
-        {
-            enemy.ChangeState(new PatrolState(enemy));
         }
 
     }
