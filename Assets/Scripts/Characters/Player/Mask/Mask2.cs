@@ -3,28 +3,43 @@ using UnityEngine;
 public class Mask2 : BaseMask
 {
     bool grabbing = false;
-    Vector3 detectorSize;
+    float rayDistance;
     Transform detectorPivot;
     LayerMask allowedLayers;
 
-    Collider obj;
+    GameObject obj;
 
-    public Mask2(Vector3 detectorSize, Transform detectorPivot, LayerMask allowedLayers)
+    public Mask2(float rayDistance, Transform detectorPivot, LayerMask allowedLayers)
     {
-        this.detectorSize = detectorSize;
+        this.rayDistance = rayDistance;
         this.detectorPivot = detectorPivot;
         this.allowedLayers = allowedLayers;
     }
 
     public override void MaskActionPerformed()
     {
-        Collider[] objs = Physics.OverlapBox(detectorPivot.position, detectorSize, detectorPivot.rotation, allowedLayers);
-        obj = objs[0];
-
-        grabbing = !grabbing;
-
         if (grabbing == false)
+        {
+            UnityEngine.Camera cam = UnityEngine.Camera.main;
+            if (cam == null) return;
+
+            Vector3 origin = cam.transform.position;
+            Vector3 direction = cam.transform.forward;
+
+            // DEBUG del rayo
+            Debug.DrawRay(origin, direction * rayDistance, Color.red, 1f);
+
+            if (Physics.Raycast(origin, direction, out RaycastHit hit, rayDistance, allowedLayers))
+            {
+                obj = hit.collider.gameObject;
+            }
+            else
+            {
+                obj = null;
+            }
+
             Grab();
+        }
         else
             Drop();
     }
@@ -37,24 +52,27 @@ public class Mask2 : BaseMask
 
     void Grab()
     {
+        if (obj == null) return;
+
         if (obj.TryGetComponent(out Rigidbody rb))
             rb.isKinematic = true;
 
-        obj.transform.parent = detectorPivot;
-        obj.transform.position = Vector3.zero;
-        obj.enabled = false;
+        obj.transform.SetParent(detectorPivot);
+        obj.transform.localPosition = Vector3.zero;
+        obj.transform.localRotation = Quaternion.identity;
+
         grabbing = true;
     }
 
     void Drop()
     {
-        if (obj.TryGetComponent(out Rigidbody rb))
+        if (obj != null && obj.TryGetComponent(out Rigidbody rb))
             rb.isKinematic = false;
 
-        obj.transform.parent = null;
-        obj.enabled = true;
-        grabbing = false;
+        if (obj != null)
+            obj.transform.SetParent(null);
 
+        grabbing = false;
         obj = null;
     }
 }

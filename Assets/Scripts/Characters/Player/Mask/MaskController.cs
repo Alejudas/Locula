@@ -16,13 +16,13 @@ public class MaskController : MonoBehaviour
     int currentMaskIndex;
 
     [Header("Mask2 utilities")]
-    [SerializeField] Vector3 detectorSize;
+    [SerializeField] float rayDistance;
     [SerializeField] Transform detectorPivot;
     [SerializeField] LayerMask allowedLayers;
 
     private void Awake()
     {
-        mask2 = new(detectorSize, detectorPivot, allowedLayers);
+        mask2 = new(rayDistance, detectorPivot, allowedLayers);
 
         masks.Add(mask1);
         masks.Add(mask2);
@@ -60,10 +60,4 @@ public class MaskController : MonoBehaviour
     }
 
     public void UseMask(InputAction.CallbackContext context) => masks[currentMaskIndex].MaskActionPerformed();
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawCube(detectorPivot.position, detectorSize);
-    }
 }
