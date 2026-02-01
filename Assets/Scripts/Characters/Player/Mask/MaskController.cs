@@ -20,6 +20,8 @@ public class MaskController : MonoBehaviour
     [SerializeField] Transform detectorPivot;
     [SerializeField] LayerMask allowedLayers;
 
+    float timerMask3 = 0;
+
     private void Awake()
     {
         mask2 = new(rayDistance, detectorPivot, allowedLayers);
@@ -57,6 +59,14 @@ public class MaskController : MonoBehaviour
         masks[currentMaskIndex].MaskDeselected();
         currentMaskIndex = currentMaskIndex-- > 0 ? currentMaskIndex-- : masks.Count - 1;
         masks[currentMaskIndex].MaskSelected();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Enemy") && currentMaskIndex == 2 && mask3.Used == false)
+        {
+
+        }
     }
 
     public void UseMask(InputAction.CallbackContext context) => masks[currentMaskIndex].MaskActionPerformed();
